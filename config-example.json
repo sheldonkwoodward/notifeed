@@ -1,0 +1,9 @@
+{
+    "https://www.reddit.com/r/MySubreddit.rss": {
+        "enabled": true,
+        "match_all": ["match", "this", "and", "that"],
+        "match_some": ["match", "this", "or", "that"],
+        "check_content": true,
+        "pushover_priority": 0
+    }
+}
