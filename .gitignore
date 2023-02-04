@@ -161,3 +161,6 @@ cython_debug/
 
 *.sqlite*
 config.json
+rss-notify-data/config.json
+rss-notify-data
+.env

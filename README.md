@@ -1,6 +1,15 @@
 # RSS Notify
 A simple script to scan RSS feeds, look for keywords, and send notifications for matches through Pushover.
 
+# Docker quick start
+1. Create a new directory in the project root called `rss-notify-data`
+2. Copy the `config-example.json` to `rss-notify-data/config.json`
+3. Edit the config based on the configuration sections below
+4. Copy the `example.env` to `.env`
+5. Protect the file `chmod 600 .env`
+6. Edit the `.env` to add your Pushover credentials
+7. Run `docker-compose up`
+
 # Non-docker quick start
 1. Install the dependencies `pipenv install`
 2. Copy the `config-example.json` to `config.json`
