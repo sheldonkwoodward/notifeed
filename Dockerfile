@@ -1,11 +1,11 @@
 FROM python:3.11.1-alpine3.17
+ENV DOCKER_CONTAINER=1
 RUN pip install pipenv
-RUN adduser -S rss
-WORKDIR /home/rss
+RUN adduser -S notifeed
+WORKDIR /home/notifeed
 COPY Pipfile Pipfile
 COPY Pipfile.lock Pipfile.lock
-COPY rss_notify.py rss_notify.py
 RUN pipenv install --system --deploy
-ENV DOCKER_CONTAINER=1
-USER rss
-CMD ["python", "/home/rss/rss_notify.py"]
+COPY notifeed notifeed
+USER notifeed
+CMD ["python", "-m", "notifeed"]

@@ -1,16 +1,15 @@
 version: "3"
 services:
-  rss:
-    image: rss-notify/latest
+  notifeed:
+    image: notifeed/latest
     build:
       context: .
-    container_name: rss-notify
+    container_name: notifeed
     restart: unless-stopped
     volumes:
-      - ./rss-notify-data:/rss-notify-data
+      - ./notifeed-data:/notifeed-data
     environment:
-      - CONFIG_FILE=/rss-notify-data/config.json
-      - DATABASE_FILE=/rss-notify-data/db.sqlite
-      - UPDATE_INTERVAL_SECONDS=60
+      - CONFIG_FILE=/notifeed-data/config.json
+      - READER_DATABASE=/notifeed-data/reader.sqlite
       - PUSHOVER_USER
       - PUSHOVER_TOKEN

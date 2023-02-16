@@ -1,9 +1,61 @@
 {
-    "https://www.reddit.com/r/MySubreddit.rss": {
-        "enabled": true,
-        "match_all": ["match", "this", "and", "that"],
-        "match_some": ["match", "this", "or", "that"],
-        "check_content": true,
-        "pushover_priority": 0
+  "version": 1,
+  "databases": {
+    "reader_env": "READER_DATABASE"
+  },
+  "feeds": {
+    "reddit_news": {
+      "enabled": true,
+      "type": "rss",
+      "config": {
+        "url": "https://www.reddit.com/r/news.rss",
+        "check_content": true
+      }
     }
+  },
+  "notifiers": {
+    "pushover_high_priority": {
+      "enabled": true,
+      "type": "pushover",
+      "config": {
+        "user_env": "PUSHOVER_USER",
+        "token_env": "PUSHOVER_TOKEN",
+        "priority": 1
+      }
+    }
+  },
+  "matchers": {
+    "war": {
+      "type": "substring",
+      "config": {
+        "case_sensitive": false,
+        "match_groups": [
+          [
+            "war"
+          ],
+          [
+            "declare"
+          ],
+          [
+            "united",
+            "states"
+          ]
+        ]
+      }
+    }
+  },
+  "searches": {
+    "interesting_news": {
+      "enabled": true,
+      "feeds": [
+        "reddit_news"
+      ],
+      "notifiers": [
+        "pushover_high_priority"
+      ],
+      "matchers": [
+        "war"
+      ]
+    }
+  }
 }
