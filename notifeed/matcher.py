@@ -7,7 +7,10 @@ class Matcher:
         self.type = config["type"]
 
         if self.type == TYPE_SUBSTRING:
-            self.substring_config = config["config"]
+            self.substring_config = {
+                "case_sensitive": config["case_sensitive"],
+                "match_groups": config["match_groups"]
+            }
         else:
             raise Exception(f"Unknown matcher type '{self.type}'")
 

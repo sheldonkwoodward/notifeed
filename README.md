@@ -11,7 +11,9 @@ A simple script to scan RSS feeds, look for keywords, and send notifications for
 7. Run `docker-compose build && docker-compose up`
 
 # Configuration JSON
-**TODO**
+Refer to the `config-example.json` file and and the `schemas/config.json.schema` file to construct your config.
+
+More instructions forthcoming.
 
 # Configuration env variables
 Along with the configuration JSON for the feeds to scan, the script has some required and optional environment
@@ -23,7 +25,8 @@ These environment variables are referenced by the config file. You can rename th
 
 * `PUSHOVER_USER` - The user key from Pushover used to send notifications
 * `PUSHOVER_TOKEN` - The application token from Pushover used to send notifications
-* `READER_DATABASE` (default `reader.sqlite`) - Name of the reader database file to load
+* `READER_DATABASE` - Name of the reader database file to create or load
 
 **Optional**
 * `CONFIG_FILE` (default `config.json`) - Name of the configuration file to load
+* `VALIDATE_CONFIG_SCHEMA` (Default `true`) - Check the Config against the JSON schema before running the app

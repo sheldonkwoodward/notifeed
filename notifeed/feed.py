@@ -10,7 +10,9 @@ class Feed:
         self.type = config["type"]
 
         if self.type == TYPE_RSS:
-            self.rss_config = config["config"]
+            self.rss_config = {
+                "url": config["url"]
+            }
             self.reader = databases["reader"]
         else:
             raise Exception(f"Unknown feed type '{self.type}'")

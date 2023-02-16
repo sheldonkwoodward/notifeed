@@ -13,7 +13,11 @@ class Notifier:
         self.type = config["type"]
 
         if self.type == TYPE_PUSHOVER:
-            self.pushover_config = config["config"]
+            self.pushover_config = {
+                "user_env": config["user_env"],
+                "token_env": config["token_env"],
+                "priority": config["priority"]
+            }
         else:
             raise Exception(f"Unknown notifier type '{self.type}'")
 

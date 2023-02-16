@@ -5,6 +5,7 @@ import os
 import sys
 import time
 
+from jsonschema import validate, ValidationError
 from reader import make_reader
 
 from notifeed.feed import Feed
@@ -22,9 +23,31 @@ def main():
     try:
         with open(config_file) as json_file:
             config = json.load(json_file)
-    except FileNotFoundError as e:
-        log.error("Could not load " + config_file)
+    except FileNotFoundError:
+        log.error(f"Could not load config file '{config_file}'")
         sys.exit(1)
+
+    # validate the schema against the JSON config if enabled
+    if os.getenv("VALIDATE_CONFIG_SCHEMA", 'true').lower() in ('true', '1', 't'):
+        # load the json schema
+        schema_file = os.getenv("CONFIG_SCHEMA_FILE")
+        try:
+            with open(schema_file) as json_file:
+                schema = json.load(json_file)
+        except FileNotFoundError:
+            log.error(f"Could not load config schema file '{schema_file}'")
+            sys.exit(1)
+
+        # validate the config against the schema
+        try:
+            validate(instance=config, schema=schema)
+        except ValidationError as e:
+            log.error("Config file is not valid")
+            raise e
+
+        log.info("Config file is valid")
+    else:
+        log.warning("Skipping validation for Config file")
 
     # parse the config
     databases = {

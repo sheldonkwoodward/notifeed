@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Notifeed config.json schema version 1",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "number",
+      "enum": [
+        1
+      ]
+    },
+    "databases": {
+      "type": "object",
+      "properties": {
+        "reader_env": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "reader_env"
+      ]
+    },
+    "feeds": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/feeds/rss"
+          }
+        ]
+      }
+    },
+    "notifiers": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/notifiers/pushover"
+          }
+        ]
+      }
+    },
+    "matchers": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/matchers/substring"
+          }
+        ]
+      }
+    },
+    "searches": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/search"
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "databases",
+    "feeds",
+    "notifiers",
+    "matchers",
+    "searches"
+  ],
+  "definitions": {
+    "feeds": {
+      "rss": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string",
+            "const": "rss"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^http(s)?:.*$"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "enabled",
+          "type",
+          "url"
+        ]
+      }
+    },
+    "notifiers": {
+      "pushover": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string",
+            "const": "pushover"
+          },
+          "user_env": {
+            "type": "string"
+          },
+          "token_env": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "enabled",
+          "type",
+          "user_env",
+          "token_env",
+          "priority"
+        ]
+      }
+    },
+    "matchers": {
+      "substring": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "substring"
+          },
+          "case_sensitive": {
+            "type": "boolean"
+          },
+          "match_groups": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "case_sensitive",
+          "match_groups"
+        ]
+      }
+    },
+    "search": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "check_title": {
+          "type": "boolean"
+        },
+        "check_message": {
+          "type": "boolean"
+        },
+        "feeds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "matchers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notifiers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "check_title",
+        "check_message",
+        "feeds",
+        "matchers",
+        "notifiers"
+      ]
+    }
+  }
+}

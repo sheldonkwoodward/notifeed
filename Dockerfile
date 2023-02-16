@@ -6,6 +6,8 @@ WORKDIR /home/notifeed
 COPY Pipfile Pipfile
 COPY Pipfile.lock Pipfile.lock
 RUN pipenv install --system --deploy
+COPY schemas schemas
+ENV CONFIG_SCHEMA_FILE=schemas/config.json.schema
 COPY notifeed notifeed
 USER notifeed
 CMD ["python", "-m", "notifeed"]
