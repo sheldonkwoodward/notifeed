@@ -8,8 +8,7 @@
       "enabled": true,
       "type": "rss",
       "config": {
-        "url": "https://www.reddit.com/r/news.rss",
-        "check_content": true
+        "url": "https://www.reddit.com/r/news.rss"
       }
     }
   },
@@ -47,14 +46,16 @@
   "searches": {
     "interesting_news": {
       "enabled": true,
+      "check_title": true,
+      "check_message": true,
       "feeds": [
         "reddit_news"
       ],
-      "notifiers": [
-        "pushover_high_priority"
-      ],
       "matchers": [
         "war"
+      ],
+      "notifiers": [
+        "pushover_high_priority"
       ]
     }
   }

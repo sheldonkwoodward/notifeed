@@ -17,16 +17,16 @@ class Notifier:
         else:
             raise Exception(f"Unknown notifier type '{self.type}'")
 
-    def send_notification(self, title, message, url=None, html=False):
+    def send_notification(self, post):
         if not self.enabled:
             return False
 
         if self.type == TYPE_PUSHOVER:
-            return self._send_notification_pushover(title, message, url, html)
+            return self._send_notification_pushover(post)
 
         raise Exception(f"Unknown notifier type '{self.type}'")
 
-    def _send_notification_pushover(self, title, message, url=None, html=False):
+    def _send_notification_pushover(self, post):
         # throw an exception if the pushover user is not specified in an environment variable
         user_env = self.pushover_config["user_env"]
         user = os.getenv(user_env)
@@ -43,13 +43,13 @@ class Notifier:
         params = {
             "user": user,
             "token": token,
-            "title": title,
-            "message": message,
-            "html": int(html),
+            "title": post.title,
+            "message": post.message,
+            "html": int(post.html),
             "priority": self.pushover_config["priority"]
         }
-        if url is not None:
-            params["url"] = url
+        if post.url is not None:
+            params["url"] = post.url
 
         # send the notification request to pushover
         requests.post(URL_PUSHOVER, params)

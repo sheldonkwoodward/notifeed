@@ -59,17 +59,17 @@ def main():
     while True:
         # iterate over all feeds
         for feed_identifier, feed in feeds.items():
-            # get the latest entries for the feed
+            # get the latest posts for the feed
             log.info(f"Start searching feed '{feed_identifier}'")
-            entries = feed.get_latest_entries()
-            log.info(f"Got {len(entries)} new entries")
+            posts = feed.get_latest_posts()
+            log.info(f"Got {len(posts)} new posts")
 
             # iterate over all applicable searches for the feed
             search_identifiers = feed_to_searches[feed_identifier]
             for search_identifier in search_identifiers:
-                # search the feed's latest entries for a match
-                log.info(f"Apply search '{search_identifier}' to the new entries")
-                searches[search_identifier].match_and_notify(entries)
+                # search the feed's latest posts for a match
+                log.info(f"Apply search '{search_identifier}' to the new posts")
+                searches[search_identifier].match_and_notify(posts)
 
         # TODO: implement real task scheduling with wait time based on config
         log.info("Sleep for 60 seconds")

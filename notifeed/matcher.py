@@ -29,11 +29,8 @@ class Matcher:
             match_all = True
             # check if all the words in the match group are in the match text
             for word in group:
-                # make the word case insensitive if specified in the config
-                word_prepped = word
-                if not case_sensitive:
-                    word_prepped = word.casefold()
-
+                # make the word case insensitive if specified and compare against the match text
+                word_prepped = word if not case_sensitive else word.casefold()
                 match_all = match_all and word_prepped in match_text_prepped
 
             # immediately return true if all words in the match group are found in the match text
