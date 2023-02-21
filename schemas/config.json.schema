@@ -9,6 +9,10 @@
         1
       ]
     },
+    "worker_count": {
+      "type": "number",
+      "minimum": 1
+    },
     "databases": {
       "type": "object",
       "properties": {
@@ -65,6 +69,7 @@
   "additionalProperties": false,
   "required": [
     "version",
+    "worker_count",
     "databases",
     "feeds",
     "notifiers",
@@ -86,13 +91,18 @@
           "url": {
             "type": "string",
             "pattern": "^http(s)?:.*$"
+          },
+          "scan_frequency": {
+            "type": "number",
+            "minimum": 1
           }
         },
         "additionalProperties": false,
         "required": [
           "enabled",
           "type",
-          "url"
+          "url",
+          "scan_frequency"
         ]
       }
     },

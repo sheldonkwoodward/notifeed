@@ -8,6 +8,7 @@ class Feed:
         self.identifier = identifier
         self.enabled = config["enabled"]
         self.type = config["type"]
+        self.scan_frequency = config["scan_frequency"]
 
         if self.type == TYPE_RSS:
             self.rss_config = {

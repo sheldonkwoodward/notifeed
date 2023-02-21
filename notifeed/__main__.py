@@ -2,7 +2,10 @@ from collections import defaultdict
 import json
 import logging as log
 import os
+import queue
+import schedule
 import sys
+import threading
 import time
 
 from jsonschema import validate, ValidationError
@@ -12,6 +15,7 @@ from notifeed.feed import Feed
 from notifeed.matcher import Matcher
 from notifeed.notifier import Notifier
 from notifeed.search import Search
+from notifeed import worker
 
 
 DEFAULT_CONFIG_FILE = "config.json"
@@ -50,6 +54,8 @@ def main():
         log.warning("Skipping validation for Config file")
 
     # parse the config
+    worker_count = config["worker_count"]
+
     databases = {
         "reader": make_reader(os.getenv(config["databases"]["reader_env"]))
     }
@@ -78,26 +84,28 @@ def main():
         for feed in search.feeds:
             feed_to_searches[feed.identifier].add(search.identifier)
 
-    # start the loop to scan the feeds periodically
+    # setup the schedules for all feed searches
+    job_queue = queue.Queue()
+    for feed_identifier, feed in feeds.items():
+        func = (worker.search_feed, feed_identifier, feed, feed_to_searches, searches)
+        schedule.every(feed.scan_frequency).seconds.do(job_queue.put, func)
+        log.info(f"Scheduled feed '{feed_identifier}' to be scanned every {feed.scan_frequency} second/s")
+
+    # create the new worker threads to perform the searches
+    log.info(f"Spawning {worker_count} worker thread/s")
+    threads = []
+    for _ in range(worker_count):
+        worker_thread = threading.Thread(target=worker.worker_main, args=(job_queue, ))
+        threads.append(worker_thread)
+        worker_thread.start()
+
+    # start the main process loop to continuously schedule the searches
+    log.info("Start scanning feeds")
+    schedule.run_all()
     while True:
-        # iterate over all feeds
-        for feed_identifier, feed in feeds.items():
-            # get the latest posts for the feed
-            log.info(f"Start searching feed '{feed_identifier}'")
-            posts = feed.get_latest_posts()
-            log.info(f"Got {len(posts)} new posts")
-
-            # iterate over all applicable searches for the feed
-            search_identifiers = feed_to_searches[feed_identifier]
-            for search_identifier in search_identifiers:
-                # search the feed's latest posts for a match
-                log.info(f"Apply search '{search_identifier}' to the new posts")
-                searches[search_identifier].match_and_notify(posts)
-
-        # TODO: implement real task scheduling with wait time based on config
-        log.info("Sleep for 60 seconds")
-        time.sleep(60)
+        schedule.run_pending()
+        time.sleep(1)
 
 if __name__ == "__main__":
-    log.basicConfig(stream=sys.stdout, level=log.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+    log.basicConfig(stream=sys.stdout, level=log.INFO, format="%(asctime)s %(threadName)s [%(levelname)s] %(message)s")
     main()
