@@ -4,6 +4,9 @@ services:
     image: notifeed/latest
     build:
       context: .
+      args:
+        UID: 1000
+        GID: 1000
     container_name: notifeed
     restart: unless-stopped
     volumes:
